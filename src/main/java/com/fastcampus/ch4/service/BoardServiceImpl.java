@@ -10,20 +10,21 @@ import java.util.*;
 @Service
 public class BoardServiceImpl implements BoardService {
     @Autowired
-    BoardDao boardDao; //Dao를 주입 받고
+    BoardDao boardDao;
 
     @Override
     public int getCount() throws Exception {
-        return boardDao.count(); //Dao의 count
+        return boardDao.count();
     }
 
     @Override
-    public int remove(Integer e_num) throws Exception {
-        return boardDao.delete(e_num);
+    public int remove(Integer bno, String writer) throws Exception {
+        return boardDao.delete(bno, writer);
     }
 
     @Override
     public int write(BoardDto boardDto) throws Exception {
+//        throw new Exception("test");
         return boardDao.insert(boardDto);
     }
 
@@ -33,9 +34,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDto read(Integer e_num) throws Exception {
-        BoardDto boardDto = boardDao.select(e_num);
-        boardDao.increaseViewCnt(e_num);
+    public BoardDto read(Integer bno) throws Exception {
+        BoardDto boardDto = boardDao.select(bno);
+        boardDao.increaseViewCnt(bno);
 
         return boardDto;
     }

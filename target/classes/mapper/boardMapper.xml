@@ -4,69 +4,64 @@
 
 <mapper namespace="com.fastcampus.ch4.dao.BoardMapper">
     <select id="count" resultType="int">
-        SELECT count(*) FROM event
+        SELECT count(*) FROM board
     </select>
 
     <delete id="deleteAll">
-        DELETE FROM event
+        DELETE FROM board
     </delete>
 
     <delete id="delete" parameterType="map">
-        DELETE FROM event WHERE e_num = #{e_num}
+        DELETE FROM board WHERE bno = #{bno} and writer = #{writer}
     </delete>
 
     <insert id="insert" parameterType="BoardDto">
-        INSERT INTO event
-            (e_title, e_text)
+        INSERT INTO board
+            (title, content, writer)
         VALUES
-            (#{e_title}, #{e_text})
+            (#{title}, #{content}, #{writer})
     </insert>
 
     <select id="selectAll" resultType="BoardDto">
-        SELECT e_num, e_title, e_text, e_date, e_edate
-        FROM event
-        ORDER BY e_date DESC, e_num DESC
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
+        ORDER BY reg_date DESC, bno DESC
     </select>
 
     <sql id="selectFromBoard">
-        SELECT e_num, e_title, e_text, e_date, e_edate
-        FROM event
+        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date
+        FROM board
     </sql>
 
     <select id="select" parameterType="int" resultType="BoardDto">
         <include refid="selectFromBoard"/>
-        WHERE e_num = #{e_num}
+        WHERE bno = #{bno}
     </select>
 
     <select id="selectPage" parameterType="map" resultType="BoardDto">
-        select *
-        from(
-                select e_num, e_title, e_text, e_date, e_edate
-                     , row_number() over(order by e_date DESC, e_num DESC) as rn
-                FROM event
-            )
-        where rn between (#{page} - 1) * #{pageSize} and #{page} * #{pageSize}
+        <include refid="selectFromBoard"/>
+        ORDER BY reg_date DESC, bno DESC
+        LIMIT #{offset}, #{pageSize}
     </select>
 
     <update id="update" parameterType="BoardDto">
-        UPDATE event
-        SET   e_title = #{e_title}
-          , e_text = #{e_text}
-          , e_date = now()
-        WHERE e_num = #{e_num}
+        UPDATE board
+        SET   title = #{title}
+          , content = #{content}
+          , up_date = now()
+        WHERE bno = #{bno} and writer = #{writer}
     </update>
 
     <update id="updateCommentCnt" parameterType="map">
-        UPDATE event
+        UPDATE board
         SET   comment_cnt = comment_cnt + #{cnt}
         WHERE bno = #{bno}
     </update>
 
     <update id="increaseViewCnt" parameterType="int">
-        UPDATE event
+        UPDATE board
         SET   view_cnt = view_cnt + 1
         WHERE bno = #{bno}
     </update>
-
 
 </mapper>

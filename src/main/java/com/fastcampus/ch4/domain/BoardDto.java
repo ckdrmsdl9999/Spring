@@ -3,80 +3,87 @@ package com.fastcampus.ch4.domain;
 import java.util.*;
 
 public class BoardDto {
-    private Integer e_num;
-    private String  e_title;
-    private String  e_text;
-    private Date    e_date;
-    private Date    e_edate;
+    private Integer bno;
+    private String  title;
+    private String  content;
+    private String  writer;
+    private int     view_cnt;
+    private int     comment_cnt;
+    private Date    reg_date;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BoardDto boardDto = (BoardDto) o;
-        return Objects.equals(e_num, boardDto.e_num) && Objects.equals(e_title, boardDto.e_title) && Objects.equals(e_text, boardDto.e_text) && Objects.equals(e_date, boardDto.e_date) && Objects.equals(e_edate, boardDto.e_edate);
+        return Objects.equals(bno, boardDto.bno) && Objects.equals(title, boardDto.title) && Objects.equals(content, boardDto.content) && Objects.equals(writer, boardDto.writer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(e_num, e_title, e_text, e_date, e_edate);
+        return Objects.hash(bno, title, content, writer);
     }
 
-    public BoardDto() {}
-
-    public BoardDto(String e_title, String e_text) {
-        this.e_title = e_title;
-        this.e_text = e_text;
+    public BoardDto() { this("","",""); }
+    public BoardDto(String title, String content, String writer){
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
     }
 
-    public Integer getE_num() {
-        return e_num;
+    public Integer getBno() {
+        return bno;
     }
-
-    public void setE_num(Integer e_num) {
-        this.e_num = e_num;
+    public void setBno(Integer bno) {
+        this.bno = bno;
     }
-
-    public String getE_title() {
-        return e_title;
+    public String getTitle() {
+        return title;
     }
-
-    public void setE_title(String e_title) {
-        this.e_title = e_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
-
-    public String getE_text() {
-        return e_text;
+    public String getContent() {
+        return content;
     }
-
-    public void setE_text(String e_text) {
-        this.e_text = e_text;
+    public void setContent(String content) {
+        this.content = content;
     }
-
-    public Date getE_date() {
-        return e_date;
+    public String getWriter() {
+        return writer;
     }
-
-    public void setE_date(Date e_date) {
-        this.e_date = e_date;
+    public void setWriter(String writer) {
+        this.writer = writer;
     }
-
-    public Date getE_edate() {
-        return e_edate;
+    public int getView_cnt() {
+        return view_cnt;
     }
-
-    public void setE_edate(Date e_edate) {
-        this.e_edate = e_edate;
+    public void setView_cnt(int view_cnt) {
+        this.view_cnt = view_cnt;
+    }
+    public int getComment_cnt() {
+        return comment_cnt;
+    }
+    public void setComment_cnt(int comment_cnt) {
+        this.comment_cnt = comment_cnt;
+    }
+    public Date getReg_date() {
+        return reg_date;
+    }
+    public void setReg_date(Date reg_date) {
+        this.reg_date = reg_date;
     }
 
     @Override
     public String toString() {
         return "BoardDto{" +
-                "e_num=" + e_num +
-                ", e_title='" + e_title + '\'' +
-                ", e_text='" + e_text + '\'' +
-                ", e_date=" + e_date +
-                ", e_edate=" + e_edate +
+                "bno=" + bno +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", writer='" + writer + '\'' +
+                ", view_cnt=" + view_cnt +
+                ", comment_cnt=" + comment_cnt +
+                ", reg_date=" + reg_date +
                 '}';
     }
 }

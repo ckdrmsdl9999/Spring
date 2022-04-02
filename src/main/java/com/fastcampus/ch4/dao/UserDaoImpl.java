@@ -20,7 +20,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int deleteUser(String id) throws Exception {
         int rowCnt = 0;
-        String sql = "DELETE FROM member WHERE m_id= ? ";
+        String sql = "DELETE FROM user_info WHERE id= ? ";
 
         try (  // try-with-resources - since jdk7
                Connection conn = ds.getConnection();
@@ -37,7 +37,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User selectUser(String id) throws Exception {
         User user = null;
-        String sql = "SELECT * FROM member WHERE m_id= ? ";
+        String sql = "SELECT * FROM user_info WHERE id= ? ";
 
         try (
                 Connection conn = ds.getConnection();
@@ -48,14 +48,13 @@ public class UserDaoImpl implements UserDao {
 
             if (rs.next()) {
                 user = new User();
-                user.setM_num(rs.getInt(1));
-                user.setM_id(rs.getString(2));
-                user.setM_nick(rs.getString(3));
-                user.setM_pwd(rs.getString(4));
-                user.setM_email(rs.getString(5));
-                user.setM_phone(rs.getString(6));
-                user.setM_point(rs.getInt(7));
-                user.setM_date(new Date(rs.getTimestamp(8).getTime()));
+                user.setId(rs.getString(1));
+                user.setPwd(rs.getString(2));
+                user.setName(rs.getString(3));
+                user.setEmail(rs.getString(4));
+                user.setBirth(new Date(rs.getDate(5).getTime()));
+                user.setSns(rs.getString(6));
+                user.setReg_date(new Date(rs.getTimestamp(7).getTime()));
             }
         }
 
@@ -66,18 +65,18 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int insertUser(User user) throws Exception {
         int rowCnt = 0;
-        String sql = "INSERT INTO member VALUES (?,?,?,?,?,?,0 ,now()) ";
+        String sql = "INSERT INTO user_info VALUES (?,?,?,?,?,?, now()) ";
 
         try(
                 Connection conn = ds.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql); // SQL Injection공격, 성능향상
         ){
-            pstmt.setInt(1, user.getM_num());
-            pstmt.setString(2, user.getM_id());
-            pstmt.setString(3, user.getM_nick());
-            pstmt.setString(4, user.getM_pwd());
-            pstmt.setString(5, user.getM_email());
-            pstmt.setString(6, user.getM_phone());
+            pstmt.setString(1, user.getId());
+            pstmt.setString(2, user.getPwd());
+            pstmt.setString(3, user.getName());
+            pstmt.setString(4, user.getEmail());
+            pstmt.setDate(5, new java.sql.Date(user.getBirth().getTime()));
+            pstmt.setString(6, user.getSns());
 
             return pstmt.executeUpdate();
         }
@@ -87,22 +86,21 @@ public class UserDaoImpl implements UserDao {
     public int updateUser(User user) throws Exception {
         int rowCnt = 0;
 
-        String sql = "UPDATE member " +
-                "SET m_num = ?, m_nick=?, m_pwd=?, m_email =?, m_phone=?, m_point=?, m_date=? " +
-                "WHERE m_id = ? ";
+        String sql = "UPDATE user_info " +
+                "SET pwd = ?, name=?, email=?, birth =?, sns=?, reg_date=? " +
+                "WHERE id = ? ";
 
         try (
                 Connection conn = ds.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);
         ){
-            pstmt.setInt(1, user.getM_num());
-            pstmt.setString(2, user.getM_nick());
-            pstmt.setString(3, user.getM_pwd());
-            pstmt.setString(4, user.getM_email());
-            pstmt.setString(5, user.getM_phone());
-            pstmt.setInt(6, user.getM_point());
-            pstmt.setTimestamp(7, new java.sql.Timestamp(user.getM_date().getTime()));
-            pstmt.setString(8, user.getM_id());
+            pstmt.setString(1, user.getPwd());
+            pstmt.setString(2, user.getName());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setDate(4, new java.sql.Date(user.getBirth().getTime()));
+            pstmt.setString(5, user.getSns());
+            pstmt.setTimestamp(6, new java.sql.Timestamp(user.getReg_date().getTime()));
+            pstmt.setString(7, user.getId());
 
             rowCnt = pstmt.executeUpdate();
         }
@@ -112,7 +110,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int count() throws Exception {
-        String sql = "SELECT count(*) FROM member ";
+        String sql = "SELECT count(*) FROM user_info ";
 
         try(
                 Connection conn = ds.getConnection();
@@ -130,7 +128,7 @@ public class UserDaoImpl implements UserDao {
     public void deleteAll() throws Exception {
         try (Connection conn = ds.getConnection();)
         {
-            String sql = "DELETE FROM member ";
+            String sql = "DELETE FROM user_info ";
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.executeUpdate();
         }
